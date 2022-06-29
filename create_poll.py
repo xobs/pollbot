@@ -1,10 +1,12 @@
 import time
 import datetime
+import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 d = datetime.date(2015, 1, 5)
 
 unixtime = time.mktime(d.timetuple())
+
 
 def get_commands():
     today = datetime.datetime.today()
@@ -38,7 +40,7 @@ def get_commands():
     print(f"Next Monday is {next_monday}")
     # print("/quickcreate")
     return f"[template: 25] [title: Blue Mage O12S] [description: What days are you available? = {raid_time_str}] [date: {close_time.day}-{close_time.month}-{close_time.year}] [time: {close_time.hour}:{close_time.minute}] [channel: #scheduling] [advanced: < limit_per_user: 7 > < strawpoll_type: reaction >]"
-    
+
     # print("25")
     # print(raid_time_str)
     # print("#general")
@@ -48,9 +50,11 @@ def get_commands():
     # print("< limit_per_user: 7 >")
     # print("Finish")
 
+
 class MyServer(BaseHTTPRequestHandler):
     def print_string(self, s):
         self.wfile.write(bytes(s, "utf-8"))
+
     def do_GET(self):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
@@ -66,9 +70,12 @@ class MyServer(BaseHTTPRequestHandler):
         # self.wfile.write(bytes("\n</code>", "utf-8"))
         self.wfile.write(bytes("</body></html>", "utf-8"))
 
+
 def main():
     hostname = "0.0.0.0"
     port = 5000
+    if "PORT" in os.environ:
+        port = int(os.environ["PORT"])
     webServer = HTTPServer((hostname, port), MyServer)
     print(f"Server started http://{hostname}:{port}")
 
@@ -79,6 +86,7 @@ def main():
 
     webServer.server_close()
     print("Server stopped.")
+
 
 if __name__ == "__main__":
     main()
