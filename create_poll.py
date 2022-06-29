@@ -68,7 +68,7 @@ class MyServer(BaseHTTPRequestHandler):
 
 def main():
     hostname = "0.0.0.0"
-    port = 80
+    port = 5000
     webServer = HTTPServer((hostname, port), MyServer)
     print(f"Server started http://{hostname}:{port}")
 
