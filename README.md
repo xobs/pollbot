@@ -1,0 +1,1 @@
+This page is a simple generator for creating polls using Raid-Helper. View it at https://raids.xobs.io/
