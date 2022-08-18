@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import datetime
 import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -27,18 +29,18 @@ def get_commands(debug):
         close_time = next_monday + datetime.timedelta(days=7)
 
     # raid_times = [next_monday]
-    days = ["Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    raid_time_str = f"<t:{int(next_monday.timestamp())}:F>"
+    # days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    days = ["(月)", "(火)", "(水)", "(木)", "(金)", "(土)", "(日)"]
+    raid_time_str = f"{days.pop(0)} <t:{int(next_monday.timestamp())}:F>"
     current_date = next_monday
     for i in range(6):
         current_date = current_date + datetime.timedelta(days=1)
-        raid_time_str += f", <t:{int(current_date.timestamp())}:F>"
-        # raid_times.append(current_date)
+        raid_time_str += f", {days.pop(0)} <t:{int(current_date.timestamp())}:F>"
 
     print(f"Today: {today}")
     print(f"Next Monday is {next_monday}")
     # print("/quickcreate")
-    return f"[template: 25] [title: Blue Mage O12S] [description: What days are you available? = {raid_time_str}] [date: {close_time.day}-{close_time.month}-{close_time.year}] [time: {close_time.hour}:{close_time.minute}] [channel: #scheduling] [advanced: < limit_per_user: 7 > < strawpoll_type: reaction >]"
+    return f"/quickcreate arguments:[template: 25] [title: Blue Mage O12S] [description: What days are you available? = {raid_time_str}] [date: {close_time.day}-{close_time.month}-{close_time.year}] [time: {close_time.hour}:{close_time.minute}] [channel: #scheduling] [advanced: < limit_per_user: 7 > < strawpoll_type: reaction >]"
 
 
 class MyServer(BaseHTTPRequestHandler):
@@ -96,13 +98,16 @@ class MyServer(BaseHTTPRequestHandler):
 });
 </script>"""
 
+    FOOTER_HTML = """<div class="well">
+    Usage: Type <code>/quickcreate</code> into Discord"""
+
     def print_line(self, s):
         self.wfile.write(bytes(s, "utf-8"))
         self.wfile.write(bytes("\r\n", "utf-8"))
 
     def do_GET(self):
         self.send_response(200)
-        self.send_header("Content-type", "text/html")
+        self.send_header("Content-type", "text/html; charset=UTF-8")
         self.end_headers()
         self.print_line("<!DOCTYPE html>")
         self.print_line('<html lang="en">')
